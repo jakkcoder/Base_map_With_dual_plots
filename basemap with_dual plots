@@ -1,0 +1,55 @@
+########################################################################### Basemap with ovelapping plots #########################################################################################
+
+
+import numpy as np
+import matplotlib.pyplot as plt
+from mpl_toolkits.basemap import Basemap
+
+# make up some data for scatter plot
+lats = np.random.randint(-75, 75, size=20)
+lons = np.random.randint(-179, 179, size=20)
+
+fig = plt.gcf()
+fig.set_size_inches(8, 6.5)
+
+m = Basemap(projection='merc', \
+            llcrnrlat=-80, urcrnrlat=80, \
+            llcrnrlon=-180, urcrnrlon=180, \
+            lat_ts=20, \
+            resolution='c')
+
+m.bluemarble(scale=0.2)   # full scale will be overkill
+m.drawcoastlines(color='white', linewidth=0.2)  # add coastlines
+
+x, y = m(lats, lons)  # transform coordinates
+x_ind,y_ind= m(np.linspace(-180,10,5), np.linspace(-80,10, 5)) 
+m.scatter(x, y,10 ,marker='o', color='Red') 
+m.plot(x_ind, y_ind,50 ,marker='o', color='Green')
+# plt.scatter(x,y)
+
+
+plt.show()
+
+#######################################################################################################################
+#######################################################################################################################
+#######################################################################################################################
+
+
+# linear transformation of cordinates
+X_max= max(x_ind)
+Y_max = max(y_ind)
+
+## solving for x cordinate
+a=[[X_max,1],[0,1]]
+b=[80,-80]
+M_x,C_x=np.linalg.solve(a,b)
+
+## solving for y cordinate
+a=[[Y_max,1],[0,1]]
+b=[180,-180]
+M_y,C_y=np.linalg.solve(a,b)
+
+#######################################################################################################################
+#######################################################################################################################
+#######################################################################################################################
+
